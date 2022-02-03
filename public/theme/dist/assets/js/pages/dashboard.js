@@ -1,3 +1,11 @@
+var d1=document.getElementById("dosen1").innerHTML;
+var d2=document.getElementById("dosen2").innerHTML;
+var d3=document.getElementById("dosen3").innerHTML;
+var d4=document.getElementById("dosen4").innerHTML;
+var d5=document.getElementById("dosen5").innerHTML;
+var d6=document.getElementById("dosen6").innerHTML;
+
+
 var optionsProfileVisit = {
 	annotations: {
 		position: 'back'
@@ -15,17 +23,19 @@ var optionsProfileVisit = {
 	plotOptions: {
 	},
 	series: [{
-		name: 'sales',
-		data: [9,20,30,20,10,20,30,20,10,20,30,20]
+		name: 'Responden',
+		data: [d1,d2,d3,d4,d5,d6]
 	}],
 	colors: '#435ebe',
 	xaxis: {
-		categories: ["Jan","Feb","Mar","Apr","May","Jun","Jul", "Aug","Sep","Oct","Nov","Dec"],
+		categories: ["Halimil Fathi","Musawarman","Muhammad Nugraha","Heti Mulyani","Ricak Agus Setiawan","Ade Winarni"],
 	},
 }
+var edom=document.getElementById("edom").innerHTML;
+var fas=document.getElementById("fas").innerHTML;
 let optionsVisitorsProfile  = {
-	series: [70, 30],
-	labels: ['Male', 'Female'],
+	series: [parseInt(fas), parseInt(edom)],
+	labels: ['Quesioner Fasilitas', 'Quesioner EDOM'],
 	colors: ['#435ebe','#55c6e8'],
 	chart: {
 		type: 'donut',

@@ -74,11 +74,15 @@ Route::get('/guest', [quesioner::class, 'indexmhs']);
 Route::get('/quesioneredommhs', [quesioner::class, 'isiedommhs']);
 Route::post('/simpanquesioneredommhs', [quesioner::class, 'tambahedommhs']);
 
+Route::get('/quesionerfasmhs', [quesioner::class, 'isifasmhs']);
+Route::post('/simpanquesionerfasmhs', [quesioner::class, 'tambahfasimhs']);
+
 Route::get('/listnilai', [quesioner::class, 'datanilai'])->middleware('auth');
 Route::get('/raportedom/{id_dosen}/{id_matkul}', [quesioner::class, 'raportedom'])->middleware('auth');
 
 Route::get('/raportfas/{id_fasilitas}', [quesioner::class, 'raportfas'])->middleware('auth');
 
+Route::get('/print',[quesioner::class, 'pdf'])->middleware('auth');
 
 //Route::get('/register', [quesioner::class, 'register']);
 

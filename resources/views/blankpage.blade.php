@@ -35,73 +35,8 @@
         </div>
     </div>
     <div class="sidebar-menu">
-        <ul class="menu">
-            <li class="sidebar-title">Menu</li>
-            <li
-                class="sidebar-item ">
-                <a href="dashboard" class='sidebar-link'>
-                    <i class="bi bi-grid-fill"></i>
-                    <span>Dashboard</span>
-                </a>
-            </li>
-            <li
-                class="sidebar-item  has-sub">
-                <a href="#" class='sidebar-link'>
-                    <i class="bi bi-stack"></i>
-                    <span>Data Master</span>
-                </a>
-                <ul class="submenu ">
-                    <li class="submenu-item ">
-                        <a href="datadosen">Dosen</a>
-                    </li>
-                    <li class="submenu-item ">
-                        <a href="datamatkul">Mata Kuliah</a>
-                    </li>
-                    <li class="submenu-item ">
-                        <a href="datafasilitas">Fasilitas</a>
-                    </li>
-                    <li class="submenu-item ">
-                        <a href="datapertanyaan">Pertanyaan</a>
-                    </li>
-                </ul>
-            </li>
-            <li
-                class="sidebar-item  has-sub">
-                <a href="#" class='sidebar-link'>
-                    <i class="bi bi-file-earmark-text-fill"></i>
-                    <span>Quesioner</span>
-                </a>
-                <ul class="submenu ">
-                    <li class="submenu-item ">
-                        <a href="listquesioneredom">Quesioner EDOM</a>
-                    </li>
-                    <li class="submenu-item ">
-                        <a href="listquesionerfas">Quesioner Fasilitas</a>
-                    </li>
-                </ul>
-            </li>
-            <li
-                class="sidebar-item  has-sub">
-                <a href="#" class='sidebar-link'>
-                    <i class="bi bi-file-earmark-medical-fill"></i>
-                    <span>Laporan</span>
-                </a>
-                <ul class="submenu ">
-                    <li class="submenu-item ">
-                        <a href="laporanedom">Laporan EDOM</a>
-                    </li>
-                    <li class="submenu-item ">
-                        <a href="laporanfas">Laporan Fasilitas</a>
-                    </li>
-                </ul>
-            </li>
-            <li class="sidebar-item">
-                <a href="logout" class='sidebar-link'>
-                    <i class="bi bi-door-open-fill"></i>
-                    <span>Logout</span>
-                </a>
-            </li>
-        </ul>
+        @section('menu')@show
+
     </div>
     <button class="sidebar-toggler btn x"><i data-feather="x"></i></button>
 </div>
@@ -129,7 +64,7 @@
         </footer>
     </div>
 </div>
-
+@section('print')@show
     <script src="{{asset('theme/dist/assets/vendors/perfect-scrollbar/perfect-scrollbar.min.js')}}"></script>
     <script src="{{asset('theme/dist/assets/js/bootstrap.bundle.min.js')}}"></script>
     <script src="{{asset('theme/dist/assets/js/extensions/sweetalert2.js')}}"></script>
@@ -137,6 +72,10 @@
     <script src="{{asset('theme/dist/assets/vendors/apexcharts/apexcharts.js')}}"></script>
     <script src="{{asset('theme/dist/assets/js/pages/dashboard.js')}}"></script>
     <script src="{{asset('theme/dist/assets/js/mazer.js')}}"></script>
+    <script src="{{asset('theme/dist/assets/js/mazer.js')}}"></script>
+    <script src="{{asset('theme/dist/assets/js/mazer.js')}}"></script>
+    <script src="{{asset('theme/dist/assets/js/mazer.js')}}"></script>
+
     <script src="{{asset('theme/dist/assets/vendors/simple-datatables/simple-datatables.js')}}"></script>
 <script>
     // Simple Datatable

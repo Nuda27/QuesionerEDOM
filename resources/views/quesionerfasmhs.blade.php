@@ -1,5 +1,4 @@
-@include('sweetalert::alert')
-@extends("blankpage")
+@extends("appearance")
 
 @section('title')
 @endsection
@@ -75,53 +74,47 @@
 @section('body')
 @endsection
 
-
 @section('isi')
     <section>
         <div class=" col-12">
+            @if(\Session::has('alert'))
+                <div class="alert alert-danger">
+                    <div>{{Session::get('alert')}}</div>
+                </div>
+                @endif
+            @if(\Session::has('alert-success'))
+            <div class="alert alert-success alert-dismissible show fade">
+                <div>{{Session::get('alert-success')}}</div>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            @endif
+
             <div class="card">
                 <div class="card-header">
-                    <h5 for="mobile-id-icon">EDOM TRPL</h5>
+                    <h4 class="card-title">Fasilitas TRPL</h4>
                     <p>Fill in according to your respective assessments</p>
                 </div>
             </div>
             <div class="card">
                 <div class="card-content">
                     <div class="card-body">
-                        <form class="form form-vertical" action="/simpanquesioneredom" method="POST"
+                        <form class="form form-vertical" action="/simpanquesionerfasmhs" method="POST"
                             enctype="multipart/form-data">
                             {{ csrf_field() }}
                             <div class="form-body">
                                 <div class="row">
                                     <div class="col-lg-4">
                                         <div class="form-group has-icon-left">
-                                            <label for="first-name-icon">Nama Dosen</label>
+                                            <label for="first-name-icon">Nama Fasilitas</label>
                                             <div class="position-relative">
-                                                <select class="default-select form-control wide" name="dosen">
-                                                    <option value="-" disabled selected>Pilih Dosen</option>
-                                                    @foreach ($datadsn as $z)
-                                                        <option value="{{ $z->id_dosen }}">{{ $z->nama_dosen }}</option>
+                                                <select class="default-select form-control wide" name="fas">
+                                                    <option value="-" disabled selected>Pilih Fasilitas</option>
+                                                    @foreach ($datafas as $z)
+                                                        <option value="{{ $z->id_fasilitas }}">{{ $z->nama_fasilitas }}</option>
                                                     @endforeach
                                                 </select>
                                                 <div class="form-control-icon">
-                                                    <i class="bi bi-person"></i>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-4">
-                                        <div class="form-group has-icon-left">
-                                            <label for="first-name-icon">Nama Mata Kuliah</label>
-                                            <div class="position-relative">
-                                                <select class="default-select form-control wide" name="mk">
-                                                    <option value="-" disabled selected>Pilih Mata Kuliah</option>
-                                                    @foreach ($datamk as $mk)
-                                                        <option value="{{ $mk->id_matkul }}">{{ $mk->nama_matkul }}
-                                                        </option>
-                                                    @endforeach
-                                                </select>
-                                                <div class="form-control-icon">
-                                                    <i class="bi bi-book"></i>
+                                                    <i class="bi bi-key"></i>
                                                 </div>
                                             </div>
                                         </div>
@@ -130,8 +123,7 @@
                                         <div class="form-group has-icon-left">
                                             <label for="first-name-icon">Semester</label>
                                             <div class="position-relative">
-                                                <input type="number" class="form-control" name="smt"
-                                                    placeholder="Semester" id="first-name-icon">
+                                                <input type="number" class="form-control" name="smt" placeholder="Semester" id="first-name-icon">
                                                 <div class="form-control-icon">
                                                     <i class="bi bi-key"></i>
                                                 </div>
@@ -156,19 +148,19 @@
                                                                             <td width="75%"><h4 for="mobile-id-icon">{{ $x->pertanyaan }}</h4></td>
                                                                         </tr>
                                                                         <tr>
-                                                                            <td> <input type="radio" name="{{ $x->id_pertanyaan }}" value="1">(1) Tidak jelas/ tidak pernah dijelaskan rencananya</td>
+                                                                            <td> <input type="radio" name="{{ $x->id_pertanyaan }}" value="1">(1) Sangat Buruk</td>
                                                                         </tr>
                                                                         <tr>
-                                                                            <td> <input type="radio" name="{{ $x->id_pertanyaan }}" value="2">(2) Kurang jelas/diterangkan secara lisan</td>
+                                                                            <td> <input type="radio" name="{{ $x->id_pertanyaan }}" value="2">(2) Buruk</td>
                                                                         </tr>
                                                                         <tr>
-                                                                            <td> <input type="radio" name="{{ $x->id_pertanyaan }}" value="3">(3) Jelas/ diterangkan, ditulis di papan atau transparansi</td>
+                                                                            <td> <input type="radio" name="{{ $x->id_pertanyaan }}" value="3">(3) Cukup</td>
                                                                         </tr>
                                                                         <tr>
-                                                                            <td> <input type="radio" name="{{ $x->id_pertanyaan }}" value="4">(4) Sangat Bagus/ ditekan, dicetak dan dibagikan.</td>
+                                                                            <td> <input type="radio" name="{{ $x->id_pertanyaan }}" value="4">(4) Baik</td>
                                                                         </tr>
                                                                         <tr>
-                                                                            <td> <input type="radio" name="{{ $x->id_pertanyaan }}" value="5">(5) Sangat Jelas/ ditekan, dicetak dan dibagikan.</td>
+                                                                            <td> <input type="radio" name="{{ $x->id_pertanyaan }}" value="5">(5) Sangat Baik</td>
                                                                         </tr>
                                                                     </table>
                                                                 </div>
@@ -202,13 +194,17 @@
                                                 @endif
                                             @endif
                                         @endforeach
-                            <div class="col-12 d-flex justify-content-end">
-                                <button id="success" type="submit" class="btn btn-primary me-1 mb-1 success">Simpan</button>
+                                        <div class="col-12 d-flex justify-content-end">
+                                            <button type="submit" class="btn btn-primary me-1 mb-1">Simpan</button>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
+                        </form>
                     </div>
-                 </form>
+                </div>
             </div>
+        </div>
         </div>
     </section>
 @endsection

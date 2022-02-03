@@ -89,7 +89,7 @@
                         <a href="laporanedom">Laporan EDOM</a>
                     </li>
                     <li class="submenu-item ">
-                        <a href="component-alert.html">Laporan Fasilitas</a>
+                        <a href="laporanfas">Laporan Fasilitas</a>
                     </li>
                 </ul>
             </li>
@@ -129,8 +129,8 @@
                                     </div>
                                 </div>
                                 <div class="col-md-8">
-                                    <h6 class="text-muted font-semibold">Profile Views</h6>
-                                    <h6 class="font-extrabold mb-0">112.000</h6>
+                                    <h6 class="text-muted font-semibold">Total Dosen</h6>
+                                    <h6 class="font-extrabold mb-0">{{ $dosen }}</h6>
                                 </div>
                             </div>
                         </div>
@@ -146,7 +146,7 @@
                                     </div>
                                 </div>
                                 <div class="col-md-8">
-                                    <h6 class="text-muted font-semibold">User Total</h6>
+                                    <h6 class="text-muted font-semibold">Total Pengguna</h6>
                                     <h6 class="font-extrabold mb-0">{{ $users }}</h6>
                                 </div>
                             </div>
@@ -192,7 +192,17 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-header">
-                            <h4>Profile Visit</h4>
+                            <h4>Dosen</h4>
+                            @php
+                                    $no=1;
+                                @endphp
+                            @foreach ($diagramdosen as $item)
+                                <small><span id="dosen{{$no}}" style="color:transparent">{{$item->jmlresponden}}</span></small>
+                                @php
+                                    $no++;
+                                @endphp
+                            @endforeach
+                            
                         </div>
                         <div class="card-body">
                             <div id="chart-profile-visit"></div>
@@ -226,7 +236,9 @@
 
             <div class="card">
                 <div class="card-header">
-                    <h4>Visitors Profile</h4>
+                    <h4>Presentasi Quesioner</h4>
+                    <small><span id="edom" style="color:transparent">{{$diagramedom}}</span></small>
+                    <small><span id="fas" style="color:transparent">{{$diagramfas}}</span></small>
                 </div>
                 <div class="card-body">
                     <div id="chart-visitors-profile"></div>

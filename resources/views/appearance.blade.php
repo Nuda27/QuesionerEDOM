@@ -36,13 +36,6 @@
         <ul class="menu">
             <li class="sidebar-title">Menu</li>
             <li
-                class="sidebar-item ">
-                <a href="guest" class='sidebar-link'>
-                    <i class="bi bi-grid-fill"></i>
-                    <span>Dashboard</span>
-                </a>
-            </li>
-            <li
                 class="sidebar-item  has-sub">
                 <a href="#" class='sidebar-link'>
                     <i class="bi bi-file-earmark-text-fill"></i>
@@ -53,7 +46,7 @@
                         <a href="quesioneredommhs">Quesioner EDOM</a>
                     </li>
                     <li class="submenu-item ">
-                        <a href="listquesionerfas">Quesioner Fasilitas</a>
+                        <a href="quesionerfasmhs">Quesioner Fasilitas</a>
                     </li>
                 </ul>
             </li>

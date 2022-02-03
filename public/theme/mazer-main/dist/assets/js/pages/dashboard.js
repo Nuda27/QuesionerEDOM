@@ -23,9 +23,12 @@ var optionsProfileVisit = {
 		categories: ["Jan","Feb","Mar","Apr","May","Jun","Jul", "Aug","Sep","Oct","Nov","Dec"],
 	},
 }
+var edom=document.getElementById("edom").innerHTML;
+var fas=document.getElementById("fas").innerHTML;
 let optionsVisitorsProfile  = {
-	series: [70, 30],
-	labels: ['Male', 'Female'],
+	
+	series: [parseInt(fas), parseInt(edom)],
+	labels: ['Quesioner Fasilitas', 'Quesioner EDOM'],
 	colors: ['#435ebe','#55c6e8'],
 	chart: {
 		type: 'donut',
@@ -38,7 +41,7 @@ let optionsVisitorsProfile  = {
 	plotOptions: {
 		pie: {
 			donut: {
-				size: '30%'
+				size: '70%'
 			}
 		}
 	}

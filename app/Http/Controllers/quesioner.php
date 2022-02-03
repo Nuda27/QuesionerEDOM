@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use RealRashid\SweetAlert\Facades\Alert;
 use RealRashid\SweetAlert\Toastr;
+use Barryvdh\DomPDF\PDF;
 
 class quesioner extends Controller
 {
@@ -37,8 +38,17 @@ class quesioner extends Controller
 
         $quesioner_edom = DB::table('quesioner_edom')->count();
         $quesioner_fas = DB::table('quesioner_fasilitas')->count();
+        $diagramedom= ($quesioner_edom/($quesioner_edom+$quesioner_fas))*100;
+        $diagramfas= ($quesioner_fas/($quesioner_edom+$quesioner_fas))*100;
+        $diagramdosen = DB::table('quesioner_edom')
+        ->join('dosen', 'quesioner_edom.id_dosen', '=', 'dosen.id_dosen')
+        ->select('quesioner_edom.id_dosen','dosen.nama_dosen',
+        DB::raw('count(*) as jmlresponden'))
+        ->groupBy('quesioner_edom.id_dosen')
+        ->get();
         $users = DB::table('users')->count();
-        return view('dashboard',compact('quesioner_edom','users','quesioner_fas'));
+        $dosen = DB::table('dosen')->count();
+        return view('dashboard',compact('quesioner_edom','users','quesioner_fas','diagramedom','diagramfas','diagramdosen','dosen'));
     }
 
     public function indexlogin(){
@@ -56,7 +66,7 @@ class quesioner extends Controller
             return redirect()->intended('/dashboard');
         }
 
-        return back()->with('LoginError', 'Maaf Username atau Password Slah');
+        return back()->with('alert-danger', 'Maaf Username atau Password Salah');
         //dd('Login Berhasil');
         //return request()->all();
     }
@@ -588,80 +598,17 @@ class quesioner extends Controller
         ->select('quesioner_edom.id_dosen', 'quesioner_edom.id_matkul', 'pertanyaan.pertanyaan'
         ,'pertanyaan.id_pertanyaan','jawaban_edom.jawaban','pertanyaan.tipe_pertanyaan',
         DB::raw('count(quesioner_edom.id_quesioner_edom) as jmlresponden'),DB::raw('sum(jawaban_edom.jawaban) as skor_didapat'),DB::raw('(count(quesioner_edom.id_quesioner_edom)*5) as skor_penuh'),DB::raw('sum(jawaban_edom.jawaban)/(count(quesioner_edom.id_quesioner_edom)*5)*100 as nilai_akhir'))
-        
+
         ->where('quesioner_edom.id_dosen','=',"$id_dosen")
         ->where('quesioner_edom.id_matkul','=',"$id_matkul")
         ->groupBy('pertanyaan.id_pertanyaan','quesioner_edom.id_dosen','quesioner_edom.id_matkul')
         ->get();
 
-
-
-       /* 
-$dat = DB::table('quesioner_edom')
-        ->join('jawaban_edom', 'quesioner_edom.id_quesioner_edom', '=', 'jawaban_edom.id_quesioner')
-        ->join('pertanyaan', 'jawaban_edom.id_pertanyaan', '=', 'pertanyaan.id_pertanyaan')
-        ->select('quesioner_edom.id_dosen', 'quesioner_edom.id_matkul', 'pertanyaan.pertanyaan'
-        ,'pertanyaan.id_pertanyaan','jawaban_edom.jawaban','pertanyaan.tipe_pertanyaan',
-        DB::raw('count(quesioner_edom.id_quesioner_edom) as jmlresponden'),DB::raw('sum(jawaban_edom.jawaban) as skor_didapat'),DB::raw('(count(quesioner_edom.id_quesioner_edom)*5) as skor_penuh'),DB::raw('sum(jawaban_edom.jawaban)/(count(quesioner_edom.id_quesioner_edom)*5)*100 as nilai_akhir'))
-        ->where('pertanyaan.tipe_pertanyaan','=','Radio Button')
-        ->where('quesioner_edom.id_dosen','=',"$id_dosen")
-        ->where('quesioner_edom.id_matkul','=',"$id_matkul")
-        ->groupBy('pertanyaan.id_pertanyaan','quesioner_edom.id_dosen','quesioner_edom.id_matkul','pertanyaan.tipe_pertanyaan')
-        ->get();
-
-
-        $dat = DB::table('quesioner_edom')
-        ->join('jawaban_edom', 'quesioner_edom.id_quesioner_edom', '=', 'jawaban_edom.id_quesioner')
-        ->join('pertanyaan', 'jawaban_edom.id_pertanyaan', '=', 'pertanyaan.id_pertanyaan')
-        ->select('quesioner_edom.id_dosen', 'quesioner_edom.id_matkul', 'pertanyaan.pertanyaan'
-        ,'pertanyaan.id_pertanyaan','jawaban_edom.jawaban','pertanyaan.tipe_pertanyaan',
-        DB::raw('count(quesioner_edom.id_quesioner_edom) as jmlresponden'),DB::raw('sum(jawaban_edom.jawaban) as skor_didapat'),DB::raw('(count(quesioner_edom.id_quesioner_edom)*5) as skor_penuh'),DB::raw('sum(jawaban_edom.jawaban)/(count(quesioner_edom.id_quesioner_edom)*5)*100 as nilai_akhir'))
-        ->where('pertanyaan.tipe_pertanyaan','=','Radio Button')
-        ->where('quesioner_edom.id_dosen','=',"$id_dosen")
-        ->where('quesioner_edom.id_matkul','=',"$id_matkul")
-        ->groupBy('pertanyaan.id_pertanyaan','quesioner_edom.id_dosen','quesioner_edom.id_matkul','pertanyaan.pertanyaan','jawaban_edom.jawaban','pertanyaan.tipe_pertanyaan')->get();
-
-
-       $dat = DB::table('quesioner_edom')
-        ->join('jawaban_edom', 'quesioner_edom.id_quesioner_edom', '=', 'jawaban_edom.id_quesioner')
-        ->join('pertanyaan', 'jawaban_edom.id_pertanyaan', '=', 'pertanyaan.id_pertanyaan')
-        ->select('quesioner_edom.id_quesioner_edom','quesioner_edom.id_dosen', 'quesioner_edom.id_matkul', 'pertanyaan.pertanyaan','pertanyaan.id_pertanyaan','jawaban_edom.jawaban','pertanyaan.tipe_pertanyaan')
-        ->where('pertanyaan.tipe_pertanyaan','=','Radio Button')
-        ->where('quesioner_edom.id_dosen','=',"$id_dosen")
-        ->where('quesioner_edom.id_matkul','=',"$id_matkul")
-        ->get();
-
-       $dat = DB::table('quesioner_edom')
-        ->join('jawaban_edom', 'quesioner_edom.id_quesioner_edom', '=', 'jawaban_edom.id_quesioner')
-        ->join('pertanyaan', 'jawaban_edom.id_pertanyaan', '=', 'pertanyaan.id_pertanyaan')
-        ->select('quesioner_edom.id_quesioner_edom','quesioner_edom.id_dosen', 'quesioner_edom.id_matkul', 'pertanyaan.pertanyaan','pertanyaan.id_pertanyaan','jawaban_edom.jawaban','pertanyaan.tipe_pertanyaan',
-        DB::raw('count(quesioner_edom.id_quesioner_edom) as jmlresponden'),DB::raw('sum(jawaban_edom.jawaban) as skor_didapat'),DB::raw('(count(quesioner_edom.id_quesioner_edom)*5) as skor_penuh'),DB::raw('sum(jawaban_edom.jawaban)/(count(quesioner_edom.id_quesioner_edom)*5)*100 as nilai_akhir'))
-        ->where('pertanyaan.tipe_pertanyaan','=','Radio Button')
-        ->where('quesioner_edom.id_dosen','=',"$id_dosen")
-        ->where('quesioner_edom.id_matkul','=',"$id_matkul")
-        ->groupBy('pertanyaan.id_pertanyaan')->get();
-
-
-       SELECT
-  quesioner_edom.id_dosen,
-  quesioner_edom.id_matkul,
-  pertanyaan.pertanyaan,
-  pertanyaan.id_pertanyaan,
-  jawaban_edom.jawaban
-FROM quesioner_edom
-JOIN jawaban_edom
-  ON quesioner_edom.id_quesioner_edom = jawaban_edom.id_quesioner
-JOIN pertanyaan
-  ON jawaban_edom.id_pertanyaan = pertanyaan.id_pertanyaan
-  WHERE pertanyaan.tipe_pertanyaan='Radio Button'
-  AND quesioner_edom.id_dosen='D002'
-  AND quesioner_edom.id_matkul='MK002';
-*/
         $dataskor = JawabanEdom::all();
         $dosen = DB::table('dosen')->where('id_dosen',$id_dosen)->get();
         $mk = DB::table('matakuliah')->where('id_matkul',$id_matkul)->get();
         $data = DB::table('pertanyaan')->where('jenis_pertanyaan','EDOM')->get();
-        return view ('nilai',['data' => $dat,'dosen' => $dosen,'mk' => $mk,'datas' => $data,'skor'=>$dataskor]);
+        return view ('nilai',['data' => $dat,'dosen' => $dosen,'mk' => $mk,'datas' => $data,'jawaban'=>$dataskor]);
     }
 
     public function datalaporanfas(){
@@ -670,6 +617,7 @@ JOIN pertanyaan
         ->select('quesioner_fasilitas.id_quesioner_fas', 'quesioner_fasilitas.id_fasilitas', 'fasilitas.nama_fasilitas','quesioner_fasilitas.tahun')
         ->groupBy('quesioner_fasilitas.id_fasilitas','quesioner_fasilitas.tahun')
         ->get();
+
         $dosen = DB::table('dosen')->get();
         $mk = DB::table('matakuliah')->get();
 
@@ -684,14 +632,75 @@ JOIN pertanyaan
         ->select('quesioner_fasilitas.id_fasilitas','fasilitas.nama_fasilitas', 'pertanyaan.pertanyaan'
         ,'pertanyaan.id_pertanyaan','jawaban_fasilitas.jawaban','pertanyaan.tipe_pertanyaan','quesioner_fasilitas.tahun',
         DB::raw('count(quesioner_fasilitas.id_quesioner_fas) as jmlresponden'),DB::raw('sum(jawaban_fasilitas.jawaban) as skor_didapat'),DB::raw('(count(quesioner_fasilitas.id_quesioner_fas)*5) as skor_penuh'),DB::raw('sum(jawaban_fasilitas.jawaban)/(count(quesioner_fasilitas.id_quesioner_fas)*5)*100 as nilai_akhir'))
-        
+
         ->where('quesioner_fasilitas.id_fasilitas','=',"$id_fasilitas")
         ->groupBy('pertanyaan.id_pertanyaan','quesioner_fasilitas.id_fasilitas','quesioner_fasilitas.tahun')
         ->get();
-
+        $dataskor = DB::table('jawaban_fasilitas')->get();
         $data = DB::table('pertanyaan')->where('jenis_pertanyaan','Fasilitas')->get();
-        return view ('nilaifasilitas',['data' => $dat,'datas' => $data]);
+        return view ('nilaifasilitas',['data' => $dat,'datas' => $data,'jawaban' => $dataskor]);
     }
 
+    public function datafasmhs(){
+        $data = DB::table('pertanyaan')->where('jenis_pertanyaan','Fasilitas')->get();
+        return view('dataquesionerfasilitas',['data'=> $data]);
+    }
+
+    public function isifasmhs(){
+        $dataFas = DB::table('fasilitas')->get();
+        $data = DB::table('pertanyaan')->where('jenis_pertanyaan','Fasilitas')->get();
+        return view ('quesionerfasmhs',['data'=> $data,'datafas' => $dataFas]);
+    }
+
+    public function tambahfasimhs(Request $a){
+        $kode = DB::table('quesioner_fasilitas')->max('id_quesioner_fas');
+    	$addNol = '';
+    	$kode = str_replace("QF", "", $kode);
+    	$kode = (int) $kode + 1;
+        $incrementKode = $kode;
+
+    	if (strlen($kode) == 1) {
+    		$addNol = "000";
+    	} elseif (strlen($kode) == 2) {
+    		$addNol = "00";
+        } elseif (strlen($kode) == 3) {
+    		$addNol = "0";
+        }
+    	$idquesioner = "QF".$addNol.$incrementKode;
+        $idku=$idquesioner;
+        $th=date('Y');
+        DB::table('quesioner_fasilitas')->insert([
+            'id_quesioner_fas' => $idquesioner,
+            'id_fasilitas' => $a->fas,
+            'semester' => $a->smt,
+            'tahun' => $th
+        ]);
+        $data = DB::table('pertanyaan')->where('jenis_pertanyaan','Fasilitas')->get();
+        foreach($data as $x){
+            if ($x->tipe_pertanyaan == 'Radio Button'){
+                if ($x->status == 'Tampilkan'){
+                    $hasil=$x->id_pertanyaan;
+                    DB::table('jawaban_fasilitas')->insert([
+                        'id_quesioner' => $idku,
+                        'id_pertanyaan' => $x->id_pertanyaan,
+                        'jawaban'=> $a->input("$hasil")
+                    ]);
+                }
+            }
+        }
+        foreach($data as $x){
+            if ($x->tipe_pertanyaan == 'Text Field'){
+                if ($x->status == 'Tampilkan'){
+                    $hasil=$x->id_pertanyaan;
+                    DB::table('jawaban_fasilitas')->insert([
+                        'id_quesioner' => $idku,
+                        'id_pertanyaan' => $x->id_pertanyaan,
+                        'jawaban'=> $a->input("$hasil")
+                    ]);
+                }
+            }
+        }
+        return redirect('/quesionerfasmhs')->with('alert-success','Data Saved!! Thank You For Evaluation');;
+    }
 }
 
